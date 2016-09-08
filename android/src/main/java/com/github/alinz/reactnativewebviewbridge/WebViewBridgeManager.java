@@ -1,11 +1,14 @@
 package com.github.alinz.reactnativewebviewbridge;
 
+import com.github.alinz.reactnativewebviewbridge.events.TopMessageEvent;
+
 import android.webkit.WebView;
 
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.views.webview.ReactWebViewManager;
+import com.facebook.react.common.MapBuilder;
 
 import java.util.Map;
 
@@ -57,7 +60,7 @@ public class WebViewBridgeManager extends ReactWebViewManager {
   @Override
   protected WebView createViewInstance(ThemedReactContext reactContext) {
     WebView root = super.createViewInstance(reactContext);
-    root.addJavascriptInterface(new JavascriptBridge((ReactContext) root.getContext()), "WebViewBridgeAndroid");
+    root.addJavascriptInterface(new JavascriptBridge(root), "WebViewBridgeAndroid");
     return root;
   }
 
@@ -65,6 +68,14 @@ public class WebViewBridgeManager extends ReactWebViewManager {
   public void onDropViewInstance(WebView root) {
     root.removeJavascriptInterface("WebViewBridgeAndroid");
     super.onDropViewInstance(root);
+  }
+
+  @Override
+  public @Nullable Map getExportedCustomDirectEventTypeConstants() {
+    return MapBuilder.of(
+      TopMessageEvent.EVENT_NAME,
+        MapBuilder.of("registrationName", "onMessage")
+    );
   }
 
   private void injectBridgeScript(WebView root) {
