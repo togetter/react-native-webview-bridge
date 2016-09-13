@@ -3,6 +3,7 @@ package com.github.alinz.reactnativewebviewbridge;
 import com.github.alinz.reactnativewebviewbridge.events.TopMessageEvent;
 
 import android.webkit.WebView;
+import android.webkit.WebSettings;
 
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
@@ -60,6 +61,8 @@ public class WebViewBridgeManager extends ReactWebViewManager {
   @Override
   protected WebView createViewInstance(ThemedReactContext reactContext) {
     WebView root = super.createViewInstance(reactContext);
+    // httpsのページでhttpを許可する by http://qiita.com/intemous9/items/2797ca533bad4c68a225
+    root.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
     root.addJavascriptInterface(new JavascriptBridge(root), "WebViewBridgeAndroid");
     return root;
   }
