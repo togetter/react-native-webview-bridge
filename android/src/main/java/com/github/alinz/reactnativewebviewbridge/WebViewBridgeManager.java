@@ -62,7 +62,10 @@ public class WebViewBridgeManager extends ReactWebViewManager {
   protected WebView createViewInstance(ThemedReactContext reactContext) {
     WebView root = super.createViewInstance(reactContext);
     // httpsのページでhttpを許可する by http://qiita.com/intemous9/items/2797ca533bad4c68a225
-    root.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        // Andoird L未満と同じ設定にする「MIXED_CONTENT_ALWAYS_ALLOW」
+        root.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+    }
     root.addJavascriptInterface(new JavascriptBridge(root), "WebViewBridgeAndroid");
     return root;
   }
